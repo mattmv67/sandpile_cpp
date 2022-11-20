@@ -8,6 +8,30 @@
 #include <utility>
 #include <tuple>
 
+
+namespace std {
+
+  // Frankensteined from https://stackoverflow.com/questions/17016175/c-unordered-map-using-a-custom-class-type-as-the-key
+
+  template <>
+  struct hash<pair<int, int>>
+  {
+    std::size_t operator()(const pair<int, int>& k) const
+    {
+      using std::size_t;
+      using std::hash;
+
+      // Compute individual hash values for first and
+      // second and combine them using XOR
+      // and bit shifting:
+
+      return ((hash<int>()(k.first) ^ (hash<int>()(k.second) << 1)) >> 1);
+    }
+  };
+
+}
+
+
 using namespace std;
 
 class Sandpile
